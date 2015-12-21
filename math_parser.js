@@ -37,11 +37,11 @@ var MathParser = (function () {
 		}
 	};
 
-	function Expression(tokens, ops1, ops2, functions) {
+	function Expression(tokens, scope) {
 		this.tokens = tokens;
-		this.ops1 = { __proto__: ops1 };
-		this.ops2 = { __proto__: ops2 };
-		this.functions = { __proto__: functions };
+		this.ops1 = scope.ops1;
+		this.ops2 = scope.ops2;
+		this.functions = scope.functions;
 	}
 
 	// Based on http://www.json.org/json2.js
@@ -114,7 +114,7 @@ var MathParser = (function () {
 				newexpression.push(nstack.shift());
 			}
 
-			return new Expression(newexpression, this.ops1, this.ops2, this.functions);
+			return new Expression(newexpression, this);
 		},
 
 		substitute: function (variable, expr) {
@@ -140,7 +140,7 @@ var MathParser = (function () {
 				}
 			}
 
-			var ret = new Expression(newexpression, this.ops1, this.ops2, this.functions);
+			var ret = new Expression(newexpression, this);
 			return ret;
 		},
 
@@ -661,7 +661,7 @@ var MathParser = (function () {
 				this.error_parsing(this.pos, "parity");
 			}
 
-			return new Expression(tokenstack, this.ops1, this.ops2, this.functions);
+			return new Expression(tokenstack, this);
 		},
 
 		evaluate: function (expr, variables) {
