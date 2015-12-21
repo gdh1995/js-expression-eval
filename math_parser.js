@@ -25,19 +25,20 @@ var MathParser = (function () {
 		this.index_ = index_ || 0;
 		this.prio_ = prio_ || 0;
 		this.number_ = (number_ !== undefined && number_ !== null) ? number_ : 0;
-		this.toString = function () {
-			switch (this.type_) {
-			case TNUMBER:
-				return this.number_;
-			case TOP1: case TOP2: case TVAR:
-				return this.index_;
-			case TFUNCALL:
-				return "CALL";
-			default:
-				return "Invalid Token";
-			}
-		};
 	}
+
+	Token.prototype.toString = function () {
+		switch (this.type_) {
+		case TNUMBER:
+			return this.number_;
+		case TOP1: case TOP2: case TVAR:
+			return this.index_;
+		case TFUNCALL:
+			return "CALL";
+		default:
+			return "Invalid Token";
+		}
+	};
 
 	function Expression(tokens, ops1, ops2, functions) {
 		this.tokens = tokens;
