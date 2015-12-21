@@ -10,9 +10,6 @@
 */
 var MathParser = (function () {
 	"use strict";
-	function object(o) {
-		return { __proto__: o };
-	}
 
 	var TNUMBER = 0,
 		TOP1 = 1,
@@ -42,9 +39,9 @@ var MathParser = (function () {
 
 	function Expression(tokens, ops1, ops2, functions) {
 		this.tokens = tokens;
-		this.ops1 = ops1;
-		this.ops2 = ops2;
-		this.functions = functions;
+		this.ops1 = { __proto__: ops1 };
+		this.ops2 = { __proto__: ops2 };
+		this.functions = { __proto__: functions };
 	}
 
 	// Based on http://www.json.org/json2.js
@@ -117,7 +114,7 @@ var MathParser = (function () {
 				newexpression.push(nstack.shift());
 			}
 
-			return new Expression(newexpression, object(this.ops1), object(this.ops2), object(this.functions));
+			return new Expression(newexpression, this.ops1, this.ops2, this.functions);
 		},
 
 		substitute: function (variable, expr) {
@@ -143,7 +140,7 @@ var MathParser = (function () {
 				}
 			}
 
-			var ret = new Expression(newexpression, object(this.ops1), object(this.ops2), object(this.functions));
+			var ret = new Expression(newexpression, this.ops1, this.ops2, this.functions);
 			return ret;
 		},
 
@@ -664,7 +661,7 @@ var MathParser = (function () {
 				this.error_parsing(this.pos, "parity");
 			}
 
-			return new Expression(tokenstack, object(this.ops1), object(this.ops2), object(this.functions));
+			return new Expression(tokenstack, this.ops1, this.ops2, this.functions);
 		},
 
 		evaluate: function (expr, variables) {
