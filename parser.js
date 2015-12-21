@@ -8,7 +8,7 @@
  to acknowledge its original source. If you feel like it, I enjoy hearing about projects that use my code,
  but don't feel like you have to let me know or ask permission.
 */
-var Parser = (function (scope) {
+var Parser = (function () {
 	function object(o) {
 		function F() {}
 		F.prototype = o;
@@ -1056,6 +1056,5 @@ var Parser = (function (scope) {
 		}
 	};
 
-	scope.Parser = Parser;
-	return Parser
-})(typeof exports === 'undefined' ? {} : exports);
+	return Parser;
+})();
