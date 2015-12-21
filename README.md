@@ -103,17 +103,6 @@ Convert the expression to a string. toString() surrounds every sub-expression
 with parentheses (except literal values, variables, and function calls), so
 it’s useful for debugging precidence errors.
 
-**toJSFunction({parameters: Array} [, {variables: object}])**
-
-Convert an Expression object into a callable JavaScript function. You need to
-provide an array of parameter names that should normally be expr.variables().
-Any unbound-variables will get their values from the global scope.
-
-toJSFunction works by simplifying the Expression (with {variables}, if
-provided), converting it to a string, and passing the string to the Function
-constructor (with some of its own code to bring built-in functions and
-constants into scope and return the result of the expression).
-
 ### Expression Syntax ###
 
 The parser accepts a pretty basic grammar. Operators have the normal precidence
