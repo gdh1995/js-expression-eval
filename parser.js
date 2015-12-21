@@ -8,7 +8,9 @@
  to acknowledge its original source. If you feel like it, I enjoy hearing about projects that use my code,
  but don't feel like you have to let me know or ask permission.
 */
-var Parser = (function () {
+var MathParser;
+(function () {
+	"use strict";
 	function object(o) {
 		function F() {}
 		F.prototype = o;
@@ -122,7 +124,7 @@ var Parser = (function () {
 
 		substitute: function (variable, expr) {
 			if (!(expr instanceof Expression)) {
-				expr = new Parser().parse(String(expr));
+				expr = new MathParser().parse(String(expr));
 			}
 			var newexpression = [];
 			var L = this.tokens.length;
@@ -276,7 +278,7 @@ var Parser = (function () {
 		},
 
 		toJSFunction: function (param, variables) {
-			var f = new Function(param, "with(Parser.values) { return " + this.simplify(variables).toString(true) + "; }");
+			var f = new Function(param, "with(MathParser.values) { return " + this.simplify(variables).toString(true) + "; }");
 			return f;
 		}
 	};
@@ -395,7 +397,7 @@ var Parser = (function () {
 		return a;
 	}
 
-	function Parser() {
+	function MathParser() {
 		this.success = false;
 		this.errormsg = "";
 		this.expression = "";
@@ -470,17 +472,17 @@ var Parser = (function () {
 		};
 	}
 
-	Parser.parse = function (expr) {
-		return new Parser().parse(expr);
+	MathParser.parse = function (expr) {
+		return new MathParser().parse(expr);
 	};
 
-	Parser.evaluate = function (expr, variables) {
-		return Parser.parse(expr).evaluate(variables);
+	MathParser.evaluate = function (expr, variables) {
+		return MathParser.parse(expr).evaluate(variables);
 	};
 
-	Parser.Expression = Expression;
+	MathParser.Expression = Expression;
 
-	Parser.values = {
+	MathParser.values = {
 		sin: Math.sin,
 		cos: Math.cos,
 		tan: Math.tan,
@@ -526,7 +528,7 @@ var Parser = (function () {
 	var CALL         = 1 << 7;
 	var NULLARY_CALL = 1 << 8;
 
-	Parser.prototype = {
+	MathParser.prototype = {
 		parse: function (expr) {
 			this.errormsg = "";
 			this.success = true;
@@ -1052,5 +1054,5 @@ var Parser = (function () {
 		}
 	};
 
-	return Parser;
+	window.MathParser = MathParser;
 })();
