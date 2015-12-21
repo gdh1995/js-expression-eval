@@ -16,11 +16,11 @@ var MathParser = (function () {
 		return new F();
 	}
 
-	var TNUMBER = 0;
-	var TOP1 = 1;
-	var TOP2 = 2;
-	var TVAR = 3;
-	var TFUNCALL = 4;
+	var TNUMBER = 0,
+		TOP1 = 1,
+		TOP2 = 2,
+		TVAR = 3,
+		TFUNCALL = 4;
 
 	function Token(type_, index_, prio_, number_) {
 		this.type_ = type_;
@@ -76,14 +76,14 @@ var MathParser = (function () {
 	Expression.prototype = {
 		simplify: function (values) {
 			values = values || {};
-			var nstack = [];
-			var newexpression = [];
-			var n1;
-			var n2;
-			var f;
-			var L = this.tokens.length;
-			var item;
-			var i = 0;
+			var nstack = [],
+				newexpression = [],
+				n1,
+				n2,
+				f,
+				L = this.tokens.length,
+				item,
+				i = 0;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -125,10 +125,10 @@ var MathParser = (function () {
 			if (!(expr instanceof Expression)) {
 				expr = new MathParser().parse(String(expr));
 			}
-			var newexpression = [];
-			var L = this.tokens.length;
-			var item;
-			var i = 0;
+			var newexpression = [],
+				L = this.tokens.length,
+				item,
+				i = 0;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -151,12 +151,12 @@ var MathParser = (function () {
 		evaluate: function (values) {
 			values = values || {};
 			var nstack = [];
-			var n1;
-			var n2;
-			var f;
-			var L = this.tokens.length;
-			var item;
-			var i = 0;
+				n1,
+				n2,
+				f,
+				L = this.tokens.length,
+				item,
+				i = 0;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -212,12 +212,12 @@ var MathParser = (function () {
 
 		toString: function (toJS) {
 			var nstack = [];
-			var n1;
-			var n2;
-			var f;
-			var L = this.tokens.length;
-			var item;
-			var i = 0;
+				n1,
+				n2,
+				f,
+				L = this.tokens.length,
+				item,
+				i = 0;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -512,25 +512,25 @@ var MathParser = (function () {
 		PI: Math.PI
 	};
 
-	var PRIMARY      = 1 << 0;
-	var OPERATOR     = 1 << 1;
-	var FUNCTION     = 1 << 2;
-	var LPAREN       = 1 << 3;
-	var RPAREN       = 1 << 4;
-	var COMMA        = 1 << 5;
-	var SIGN         = 1 << 6;
-	var CALL         = 1 << 7;
-	var NULLARY_CALL = 1 << 8;
+	var PRIMARY      = 1 << 0,
+		OPERATOR     = 1 << 1,
+		FUNCTION     = 1 << 2,
+		LPAREN       = 1 << 3,
+		RPAREN       = 1 << 4,
+		COMMA        = 1 << 5,
+		SIGN         = 1 << 6,
+		CALL         = 1 << 7,
+		NULLARY_CALL = 1 << 8;
 
 	MathParser.prototype = {
 		parse: function (expr) {
+			var operstack = [],
+				tokenstack = [],
+				expected = (PRIMARY | LPAREN | FUNCTION | SIGN),
+				noperators = 0;
 			this.errormsg = "";
 			this.success = true;
-			var operstack = [];
-			var tokenstack = [];
 			this.tmpprio = 0;
-			var expected = (PRIMARY | LPAREN | FUNCTION | SIGN);
-			var noperators = 0;
 			this.expression = expr;
 			this.pos = 0;
 
