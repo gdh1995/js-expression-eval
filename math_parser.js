@@ -150,7 +150,7 @@ var MathParser = (function () {
 
 		evaluate: function (values) {
 			values = values || {};
-			var nstack = [];
+			var nstack = [],
 				n1,
 				n2,
 				f,
@@ -211,7 +211,7 @@ var MathParser = (function () {
 		},
 
 		toString: function (toJS) {
-			var nstack = [];
+			var nstack = [],
 				n1,
 				n2,
 				f,
