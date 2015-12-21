@@ -13,12 +13,12 @@ convenient for math (`Math.pow(2, x)` instead of `2^x`, etc.).
 Documentation (incomplete, of course)
 -------------------------------------
 
-### Parser ###
+### MathParser ###
 
-Parser is the main class in the library. It has “static” methods for parsing
+MathParser is the main class in the library. It has “static” methods for parsing
 and evaluating expressions.
 
-**Parser()**
+**MathParser()**
 
 Constructor. In most cases, you don’t need this. Eventually, I’ll get around to
 documenting why you would want to, but for now, you can figure it
@@ -33,12 +33,12 @@ Convert a mathematical expression into an Expression object.
 Parse and immediately evaluate an expression using the values/functions from
 the {variables} object.
 
-Parser.evaluate(expr, vars) is equivalent to calling
-Parser.parse(expr).evaluate(vars). In fact, that’s exactly what it does.
+MathParser.evaluate(expr, vars) is equivalent to calling
+MathParser.parse(expr).evaluate(vars). In fact, that’s exactly what it does.
 
-### Parser.Expression ###
+### MathParser.Expression ###
 
-Parser.parse returns an Expression object. Expression objects are similar to
+MathParser.parse returns an Expression object. Expression objects are similar to
 JavaScript functions, i.e. they can be “called” with variables bound to
 passed-in values. In fact, they can even be converted into JavaScript
 functions.
@@ -50,7 +50,7 @@ unbound variable in the expression is bound to the corresponding member of the
 {variables} object. If there are unbound variables, evaluate will throw an
 exception.
 
-    js> expr = Parser.parse("2 ^ x");
+    js> expr = MathParser.parse("2 ^ x");
     (2^x)
     js> expr.evaluate({ x: 3 });
     8
@@ -60,7 +60,7 @@ exception.
 Create a new expression with the specified variable replaced with another
 expression (essentially, function composition).
 
-    js> expr = Parser.parse("2 * x + 1");
+    js> expr = MathParser.parse("2 * x + 1");
     ((2*x)+1)
     js> expr.substitute("x", "4 * x");
     ((2*(4*x))+1)
@@ -81,7 +81,7 @@ previous example cannot be simplified unless you provide a value for x.
 `2*4*x+1` can however, because it’s parsed as `(((2*4)*x)+1)`, so the `(2*4)`
 sub-expression will be replaced with “8″, resulting in `((8*x)+1)`.
 
-    js> expr = Parser.parse("x * (y * atan(1))").simplify({ y: 4 });
+    js> expr = MathParser.parse("x * (y * atan(1))").simplify({ y: 4 });
     (x*3.141592653589793)
     js> expr.evaluate({ x: 2 });
     6.283185307179586
@@ -90,7 +90,7 @@ sub-expression will be replaced with “8″, resulting in `((8*x)+1)`.
 
     Get an array of the unbound variables in the expression.
 
-    js> expr = Parser.parse("x * (y * atan(1))");
+    js> expr = MathParser.parse("x * (y * atan(1))");
     (x*(y*atan(1)))
     js> expr.variables();
     x,y
