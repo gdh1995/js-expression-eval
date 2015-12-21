@@ -270,6 +270,11 @@ var MathParser = (function () {
 			}
 
 			return vars;
+		},
+
+		toJSFunction: function (param, variables) {
+			var f = new Function(param, "with(MathParser.values) { return " + this.simplify(variables).toString(true) + "; }");
+			return f;
 		}
 	};
 
