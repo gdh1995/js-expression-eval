@@ -30,9 +30,7 @@ var Parser = (function () {
 			switch (this.type_) {
 			case TNUMBER:
 				return this.number_;
-			case TOP1:
-			case TOP2:
-			case TVAR:
+			case TOP1: case TOP2: case TVAR:
 				return this.index_;
 			case TFUNCALL:
 				return "CALL";
@@ -50,28 +48,26 @@ var Parser = (function () {
 	}
 
 	// Based on http://www.json.org/json2.js
-    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        escapable = /[\\\'\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        meta = {    // table of character substitutions
-            '\b': '\\b',
-            '\t': '\\t',
-            '\n': '\\n',
-            '\f': '\\f',
-            '\r': '\\r',
-            "'" : "\\'",
-            '\\': '\\\\'
-        };
+	var cx =		/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+		escapable = /[\\\'\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+		meta = {	// table of character substitutions
+			'\b': '\\b',
+			'\t': '\\t',
+			'\n': '\\n',
+			'\f': '\\f',
+			'\r': '\\r',
+			"'": "\\'",
+			'\\': '\\\\'
+		};
 
 	function escapeValue(v) {
 		if (typeof v === "string") {
 			escapable.lastIndex = 0;
-	        return escapable.test(v) ?
-	            "'" + v.replace(escapable, function (a) {
-	                var c = meta[a];
-	                return typeof c === 'string' ? c :
-	                    '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-	            }) + "'" :
-	            "'" + v + "'";
+			return escapable.test(v) ? "'" + v.replace(escapable, function (a) {
+				var c = meta[a];
+				return typeof c === 'string' ? c
+					: '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+			}) + "'": "'" + v + "'";
 		}
 		return v;
 	}
@@ -351,13 +347,13 @@ var Parser = (function () {
 		return Math.atanh ? Math.atanh(a) : (Math.log((1+a)/(1-a)) / 2);
 	}
 	function log10(a) {
-	      return Math.log(a) * Math.LOG10E;
+		return Math.log(a) * Math.LOG10E;
 	}
 	function neg(a) {
 		return -a;
 	}
 	function trunc(a) {
-		if(Math.trunc) return Math.trunc(a);
+		if (Math.trunc) return Math.trunc(a);
 		else return x < 0 ? Math.ceil(x) : Math.floor(x);
 	}
 	function random(a) {
@@ -374,7 +370,7 @@ var Parser = (function () {
 
 	// TODO: use hypot that doesn't overflow
 	function hypot() {
-		if(Math.hypot) return Math.hypot.apply(this, arguments);
+		if (Math.hypot) return Math.hypot.apply(this, arguments);
 		var y = 0;
 		var length = arguments.length;
 		for (var i = 0; i < length; i++) {
@@ -426,8 +422,8 @@ var Parser = (function () {
 			"atanh": atanh,
 			"sqrt": Math.sqrt,
 			"log": Math.log,
-			"lg" : log10,
-			"log10" : log10,
+			"lg": log10,
+			"log10": log10,
 			"abs": Math.abs,
 			"ceil": Math.ceil,
 			"floor": Math.floor,
@@ -598,7 +594,7 @@ var Parser = (function () {
 					expected = (PRIMARY | LPAREN | FUNCTION | SIGN | NULLARY_CALL);
 				}
 				else if (this.isRightParenth()) {
-				    if (expected & NULLARY_CALL) {
+					if (expected & NULLARY_CALL) {
 						var token = new Token(TNUMBER, 0, 0, []);
 						tokenstack.push(token);
 					}
@@ -721,7 +717,7 @@ var Parser = (function () {
 		},
 
 		// Ported from the yajjl JSON parser at http://code.google.com/p/yajjl/
-		unescape: function(v, pos) {
+		unescape: function (v, pos) {
 			var buffer = [];
 			var escaping = false;
 
