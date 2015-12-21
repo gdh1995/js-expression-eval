@@ -8,8 +8,7 @@
  to acknowledge its original source. If you feel like it, I enjoy hearing about projects that use my code,
  but don't feel like you have to let me know or ask permission.
 */
-var MathParser;
-(function () {
+var MathParser = (function () {
 	"use strict";
 	function object(o) {
 		function F() {}
@@ -1049,5 +1048,5 @@ var MathParser;
 		}
 	};
 
-	window.MathParser = MathParser;
+	return MathParser;
 })();
