@@ -70,6 +70,8 @@ var MathParser = (function () {
 	}
 
 	Expression.prototype = {
+		constructor: Expression,
+
 		simplify: function (values) {
 			values = values || {};
 			var nstack = [],
@@ -519,6 +521,8 @@ var MathParser = (function () {
 		NULLARY_CALL = 1 << 8;
 
 	MathParser.prototype = {
+		constructor: MathParser,
+
 		parse: function (expr) {
 			var operstack = [],
 				tokenstack = [],
