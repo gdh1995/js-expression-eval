@@ -121,7 +121,7 @@ var MathParser = (function () {
 
 		substitute: function (variable, expr) {
 			if (!(expr instanceof Expression)) {
-				expr = new MathParser().parse(String(expr));
+				expr = MathParser.singleton.parse(String(expr));
 			}
 			var newexpression = [],
 				L = this.tokens.length,
@@ -465,7 +465,7 @@ var MathParser = (function () {
 	}
 
 	MathParser.parse = function (expr) {
-		return new MathParser().parse(expr);
+		return MathParser.singleton.parse(expr);
 	};
 
 	MathParser.evaluate = function (expr, variables) {
@@ -1048,5 +1048,5 @@ var MathParser = (function () {
 		}
 	};
 
-	return MathParser;
+	return MathParser.singleton = new MathParser();
 })();
