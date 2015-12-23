@@ -1048,5 +1048,9 @@ var MathParser = (function () {
 		}
 	};
 
-	return MathParser.singleton = new MathParser();
+	MathParser.singleton = new MathParser();
+	if (window.PluginDefers && PluginDefers.MathParser) {
+		PluginDefers.MathParser.resolve(MathParser.singleton);
+	}
+	return MathParser.singleton;
 })();
