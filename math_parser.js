@@ -1049,8 +1049,6 @@ var MathParser = (function () {
 	};
 
 	MathParser.singleton = new MathParser();
-	if (window.Defers && Defers.MathParser) {
-		Defers.MathParser.resolve(MathParser.singleton);
-	}
+	(typeof exports !== 'undefined' && exports || {}).MathParser = MathParser.singleton;
 	return MathParser.singleton;
 })();
