@@ -400,29 +400,29 @@ var MathParser = (function () {
 		this.tmpprio = 0;
 
 		this.ops1 = {
-			"sin": Math.sin,
-			"cos": Math.cos,
-			"tan": Math.tan,
-			"asin": Math.asin,
-			"acos": Math.acos,
-			"atan": Math.atan,
-			"sinh": sinh,
-			"cosh": cosh,
-			"tanh": tanh,
-			"asinh": asinh,
-			"acosh": acosh,
-			"atanh": atanh,
-			"sqrt": Math.sqrt,
-			"log": Math.log,
-			"lg": log10,
-			"log10": log10,
-			"abs": Math.abs,
-			"ceil": Math.ceil,
-			"floor": Math.floor,
-			"round": Math.round,
-			"trunc": trunc,
+			sin: Math.sin,
+			cos: Math.cos,
+			tan: Math.tan,
+			asin: Math.asin,
+			acos: Math.acos,
+			atan: Math.atan,
+			sinh: sinh,
+			cosh: cosh,
+			tanh: tanh,
+			asinh: asinh,
+			acosh: acosh,
+			atanh: atanh,
+			sqrt: Math.sqrt,
+			log: Math.log,
+			lg: log10,
+			log10: log10,
+			abs: Math.abs,
+			ceil: Math.ceil,
+			floor: Math.floor,
+			round: Math.round,
+			trunc: trunc,
 			"-": neg,
-			"exp": Math.exp
+			exp: Math.exp
 		};
 
 		this.ops2 = {
@@ -440,25 +440,25 @@ var MathParser = (function () {
 			"<": lessThan,
 			">=": greaterThanEqual,
 			"<=": lessThanEqual,
-			"and": andOperator,
-			"or": orOperator
+			and: andOperator,
+			or: orOperator
 		};
 
 		this.functions = {
-			"random": random,
-			"fac": fac,
-			"min": Math.min,
-			"max": Math.max,
-			"hypot": hypot,
-			"pyt": hypot, // backward compat
-			"pow": Math.pow,
-			"atan2": Math.atan2,
+			random: random,
+			fac: fac,
+			min: Math.min,
+			max: Math.max,
+			hypot: hypot,
+			pyt: hypot, // backward compat
+			pow: Math.pow,
+			atan2: Math.atan2,
 			"if": condition
 		};
 
 		this.consts = {
-			"E": Math.E,
-			"PI": Math.PI
+			E: Math.E,
+			PI: Math.PI
 		};
 	}
 
