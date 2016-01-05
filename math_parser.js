@@ -460,6 +460,8 @@ var MathParser = (function () {
 			E: Math.E,
 			PI: Math.PI
 		};
+
+		this.setNullProto();
 	}
 
 	MathParser.parse = function (expr) {
@@ -676,6 +678,13 @@ var MathParser = (function () {
 			this.errormsg = "parse error [column " + (column) + "]: " + msg;
 			this.column = column;
 			throw new Error(this.errormsg);
+		},
+
+		setNullProto: function() {
+			this.ops1.__proto__ = null;
+			this.ops2.__proto__ = null;
+			this.functions.__proto__ = null;
+			this.consts.__proto__ = null;
 		},
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
@@ -1017,6 +1026,10 @@ var MathParser = (function () {
 			return false;
 		}
 	};
+
+	(function() {
+		MathParser.values.__proto__ = null;
+	})();
 
 	MathParser.singleton = new MathParser();
 	(typeof exports !== 'undefined' && exports || {}).MathParser = MathParser.singleton;
