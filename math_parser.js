@@ -80,7 +80,7 @@ var MathParser = (function () {
 				f,
 				L = this.tokens.length,
 				item,
-				i = 0;
+				i;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -125,7 +125,7 @@ var MathParser = (function () {
 			var newexpression = [],
 				L = this.tokens.length,
 				item,
-				i = 0;
+				i;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -141,8 +141,7 @@ var MathParser = (function () {
 				}
 			}
 
-			var ret = new Expression(newexpression, this);
-			return ret;
+			return new Expression(newexpression, this);
 		},
 
 		evaluate: function (values) {
@@ -153,7 +152,7 @@ var MathParser = (function () {
 				f,
 				L = this.tokens.length,
 				item,
-				i = 0;
+				i;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -214,7 +213,7 @@ var MathParser = (function () {
 				f,
 				L = this.tokens.length,
 				item,
-				i = 0;
+				i;
 			for (i = 0; i < L; i++) {
 				item = this.tokens[i];
 				var type_ = item.type_;
@@ -504,7 +503,7 @@ var MathParser = (function () {
 		pyt: hypot, // backward compat
 		pow: Math.pow,
 		atan2: Math.atan2,
-		if: condition,
+		"if": condition,
 		E: Math.E,
 		PI: Math.PI
 	};
@@ -525,6 +524,7 @@ var MathParser = (function () {
 		parse: function (expr) {
 			var operstack = [],
 				tokenstack = [],
+				token,
 				expected = (PRIMARY | LPAREN | FUNCTION | SIGN),
 				noperators = 0;
 			this.errormsg = "";
@@ -560,7 +560,7 @@ var MathParser = (function () {
 					if ((expected & PRIMARY) === 0) {
 						this.error_parsing(this.pos, "unexpected number");
 					}
-					var token = new Token(TNUMBER, 0, 0, this.tokennumber);
+					token = new Token(TNUMBER, 0, 0, this.tokennumber);
 					tokenstack.push(token);
 
 					expected = (OPERATOR | RPAREN | COMMA);
@@ -569,7 +569,7 @@ var MathParser = (function () {
 					if ((expected & PRIMARY) === 0) {
 						this.error_parsing(this.pos, "unexpected string");
 					}
-					var token = new Token(TNUMBER, 0, 0, this.tokennumber);
+					token = new Token(TNUMBER, 0, 0, this.tokennumber);
 					tokenstack.push(token);
 
 					expected = (OPERATOR | RPAREN | COMMA);
@@ -590,7 +590,7 @@ var MathParser = (function () {
 				}
 				else if (this.isRightParenth()) {
 					if (expected & NULLARY_CALL) {
-						var token = new Token(TNUMBER, 0, 0, []);
+						token = new Token(TNUMBER, 0, 0, []);
 						tokenstack.push(token);
 					}
 					else if ((expected & RPAREN) === 0) {
@@ -793,14 +793,12 @@ var MathParser = (function () {
 		isConst: function () {
 			var str;
 			for (var i in this.consts) {
-				if (true) {
-					var L = i.length;
-					str = this.expression.substr(this.pos, L);
-					if (i === str) {
-						this.tokennumber = this.consts[i];
-						this.pos += L;
-						return true;
-					}
+				var L = i.length;
+				str = this.expression.substr(this.pos, L);
+				if (i === str) {
+					this.tokennumber = this.consts[i];
+					this.pos += L;
+					return true;
 				}
 			}
 			return false;
@@ -912,26 +910,16 @@ var MathParser = (function () {
 
 		isSign: function () {
 			var code = this.expression.charCodeAt(this.pos - 1);
-			if (code === 45 || code === 43) { // -
-				return true;
-			}
-			return false;
+			return code === 45 || code === 43; // -
+
 		},
 
 		isPositiveSign: function () {
-			var code = this.expression.charCodeAt(this.pos - 1);
-			if (code === 43) { // +
-				return true;
-			}
-			return false;
+			return this.expression.charCodeAt(this.pos - 1) === 43; // +
 		},
 
 		isNegativeSign: function () {
-			var code = this.expression.charCodeAt(this.pos - 1);
-			if (code === 45) { // -
-				return true;
-			}
-			return false;
+			return this.expression.charCodeAt(this.pos - 1) === 45; // -
 		},
 
 		isLeftParenth: function () {
