@@ -464,14 +464,6 @@ var MathParser = (function () {
 		this.setNullProto();
 	}
 
-	MathParser.parse = function (expr) {
-		return MathParser.singleton.parse(expr);
-	};
-
-	MathParser.evaluate = function (expr, variables) {
-		return MathParser.parse(expr).evaluate(variables);
-	};
-
 	MathParser.Expression = Expression;
 
 	MathParser.values = {
@@ -1024,10 +1016,6 @@ var MathParser = (function () {
 			return false;
 		}
 	};
-
-	(function() {
-		MathParser.values.__proto__ = null;
-	})();
 
 	MathParser.singleton = new MathParser();
 	(typeof exports !== 'undefined' && exports || {}).MathParser = MathParser.singleton;
