@@ -547,7 +547,6 @@ var MathParser = (function () {
 						expected = (PRIMARY | LPAREN | FUNCTION | SIGN);
 					}
 					else if (this.isComment()) {
-
 					}
 					else {
 						if ((expected & OPERATOR) === 0) {
@@ -644,13 +643,11 @@ var MathParser = (function () {
 				}
 				else if (this.isWhite()) {
 				}
+				else if (this.errormsg === "") {
+					this.error_parsing(this.pos, "unknown character");
+				}
 				else {
-					if (this.errormsg === "") {
-						this.error_parsing(this.pos, "unknown character");
-					}
-					else {
-						this.error_parsing(this.pos, this.errormsg);
-					}
+					this.error_parsing(this.pos, this.errormsg);
 				}
 			}
 			if (this.tmpprio < 0 || this.tmpprio >= 10) {
@@ -722,55 +719,56 @@ var MathParser = (function () {
 
 		// Ported from the yajjl JSON parser at http://code.google.com/p/yajjl/
 		unescape: function (v, pos) {
-			var buffer = [];
-			var escaping = false;
+			var buffer = [],
+				i, c,
+				not_escaping = true;
 
-			for (var i = 0; i < v.length; i++) {
-				var c = v.charAt(i);
+			for (i = 0; i < v.length; i++) {
+				c = v.charAt(i);
 
-				if (escaping) {
-					switch (c) {
-					case "'":
-						buffer.push("'");
-						break;
-					case '\\':
-						buffer.push('\\');
-						break;
-					case '/':
-						buffer.push('/');
-						break;
-					case 'b':
-						buffer.push('\b');
-						break;
-					case 'f':
-						buffer.push('\f');
-						break;
-					case 'n':
-						buffer.push('\n');
-						break;
-					case 'r':
-						buffer.push('\r');
-						break;
-					case 't':
-						buffer.push('\t');
-						break;
-					case 'u':
-						// interpret the following 4 characters as the hex of the unicode code point
-						var codePoint = parseInt(v.substring(i + 1, i + 5), 16);
-						buffer.push(String.fromCharCode(codePoint));
-						i += 4;
-						break;
-					default:
-						throw this.error_parsing(pos + i, "Illegal escape sequence: '\\" + c + "'");
-					}
-					escaping = false;
-				} else {
+				if (not_escaping) {
 					if (c == '\\') {
-						escaping = true;
+						not_escaping = false;
 					} else {
 						buffer.push(c);
 					}
+					continue;
 				}
+				switch (c) {
+				case "'":
+					buffer.push("'");
+					break;
+				case '\\':
+					buffer.push('\\');
+					break;
+				case '/':
+					buffer.push('/');
+					break;
+				case 'b':
+					buffer.push('\b');
+					break;
+				case 'f':
+					buffer.push('\f');
+					break;
+				case 'n':
+					buffer.push('\n');
+					break;
+				case 'r':
+					buffer.push('\r');
+					break;
+				case 't':
+					buffer.push('\t');
+					break;
+				case 'u':
+					// interpret the following 4 characters as the hex of the unicode code point
+					var codePoint = parseInt(v.substring(i + 1, i + 5), 16);
+					buffer.push(String.fromCharCode(codePoint));
+					i += 4;
+					break;
+				default:
+					throw this.error_parsing(pos + i, "Illegal escape sequence: '\\" + c + "'");
+				}
+				not_escaping = true;
 			}
 
 			return buffer.join('');
