@@ -524,7 +524,7 @@ var MathParser = (function () {
 		parse: function (expr) {
 			var operstack = [],
 				tokenstack = [],
-				token,
+				token, str,
 				expected = (PRIMARY | LPAREN | FUNCTION | SIGN),
 				noperators = 0;
 			this.errormsg = "";
@@ -615,7 +615,7 @@ var MathParser = (function () {
 					tokenstack.push(consttoken);
 					expected = (OPERATOR | RPAREN | COMMA);
 				}
-				else if (this.isOp2()) {
+				else if (this.isOp2(str = this.getOpStr())) {
 					if ((expected & FUNCTION) === 0) {
 						this.error_parsing(this.pos, "unexpected function");
 					}
@@ -962,17 +962,20 @@ var MathParser = (function () {
 			return false;
 		},
 
-		isOp1: function () {
-			var str = "";
-			for (var i = this.pos; i < this.expression.length; i++) {
-				var c = this.expression.charAt(i);
-				if (c.toUpperCase() === c.toLowerCase()) {
-					if (i === this.pos || (c != '_' && (c < '0' || c > '9'))) {
+		getOpStr: function() {
+			var c, i = this.pos, str = this.expression;
+			for (; i < str.length; i++) {
+				c = str.charCodeAt(i);
+				if (c < 65 || c > 122 || (c > 90 && c < 97)) {
+					if (i === this.pos || (c != 95 && (c < 48 || c > 57))) {
 						break;
 					}
 				}
-				str += c;
 			}
+			return str.substring(this.pos, i);
+		},
+
+		isOp1: function (str) {
 			if (str.length > 0 && (str in this.ops1)) {
 				this.tokenindex = str;
 				this.tokenprio = 5;
@@ -982,17 +985,7 @@ var MathParser = (function () {
 			return false;
 		},
 
-		isOp2: function () {
-			var str = "";
-			for (var i = this.pos; i < this.expression.length; i++) {
-				var c = this.expression.charAt(i);
-				if (c.toUpperCase() === c.toLowerCase()) {
-					if (i === this.pos || (c != '_' && (c < '0' || c > '9'))) {
-						break;
-					}
-				}
-				str += c;
-			}
+		isOp2: function (str) {
 			if (str.length > 0 && (str in this.ops2)) {
 				this.tokenindex = str;
 				this.tokenprio = 5;
@@ -1002,17 +995,7 @@ var MathParser = (function () {
 			return false;
 		},
 
-		isVar: function () {
-			var str = "";
-			for (var i = this.pos; i < this.expression.length; i++) {
-				var c = this.expression.charAt(i);
-				if (c.toUpperCase() === c.toLowerCase()) {
-					if (i === this.pos || (c != '_' && (c < '0' || c > '9'))) {
-						break;
-					}
-				}
-				str += c;
-			}
+		isVar: function (str) {
 			if (str.length > 0) {
 				this.tokenindex = str;
 				this.tokenprio = 4;
