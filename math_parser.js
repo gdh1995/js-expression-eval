@@ -625,7 +625,7 @@ var MathParser = (function () {
 					noperators += 2;
 					expected = (LPAREN);
 				}
-				else if (this.isOp1()) {
+				else if (this.isOp1(str)) {
 					if ((expected & FUNCTION) === 0) {
 						this.error_parsing(this.pos, "unexpected function");
 					}
@@ -633,7 +633,7 @@ var MathParser = (function () {
 					noperators++;
 					expected = (LPAREN);
 				}
-				else if (this.isVar()) {
+				else if (this.isVar(str)) {
 					if ((expected & PRIMARY) === 0) {
 						this.error_parsing(this.pos, "unexpected variable");
 					}
