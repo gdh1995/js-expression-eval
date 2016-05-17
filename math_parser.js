@@ -676,7 +676,7 @@ var MathParser = (function () {
 					this.error_parsing(this.pos, this.errormsg);
 				}
 			}
-			if (this.tmpprio < 0 || this.tmpprio >= 10) {
+			if (this.tmpprio < 0 || this.tmpprio >= 100) {
 				this.error_parsing(this.pos, "unmatched \"()\"");
 			}
 			while (operstack.length > 0) {
