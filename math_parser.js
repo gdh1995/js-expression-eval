@@ -426,6 +426,7 @@ var MathParser = (function () {
 		this.tmpprio = 0;
 
 		this.ops1 = {
+			__proto__: null,
 			sin: Math.sin,
 			cos: Math.cos,
 			tan: Math.tan,
@@ -450,11 +451,12 @@ var MathParser = (function () {
 			"-": neg,
 			"!": not,
 			"~": bitNot,
-			"not": not,
-			"exp": Math.exp
+			not: not,
+			exp: Math.exp
 		};
 
 		this.ops2 = {
+			__proto__: null,
 			"+": add,
 			"-": sub,
 			"*": mul,
@@ -484,6 +486,7 @@ var MathParser = (function () {
 		};
 
 		this.functions = {
+			__proto__: null,
 			random: random,
 			fac: fac,
 			min: Math.min,
@@ -496,53 +499,13 @@ var MathParser = (function () {
 		};
 
 		this.consts = {
+			__proto__: null,
 			E: Math.E,
 			PI: Math.PI
 		};
-
-		Object.setPrototypeOf(this.ops1, null);
-		Object.setPrototypeOf(this.ops2, null);
-		Object.setPrototypeOf(this.functions, null);
-		Object.setPrototypeOf(this.consts, null);
 	}
 
 	MathParser.Expression = Expression;
-
-	MathParser.values = {
-		sin: Math.sin,
-		cos: Math.cos,
-		tan: Math.tan,
-		asin: Math.asin,
-		acos: Math.acos,
-		atan: Math.atan,
-		sinh: sinh,
-		cosh: cosh,
-		tanh: tanh,
-		asinh: asinh,
-		acosh: acosh,
-		atanh: atanh,
-		sqrt: Math.sqrt,
-		log: Math.log,
-		lg: log10,
-		log10: log10,
-		abs: Math.abs,
-		ceil: Math.ceil,
-		floor: Math.floor,
-		round: Math.round,
-		trunc: trunc,
-		random: random,
-		fac: fac,
-		exp: Math.exp,
-		min: Math.min,
-		max: Math.max,
-		hypot: hypot,
-		pyt: hypot, // backward compat
-		pow: Math.pow,
-		atan2: Math.atan2,
-		"if": condition,
-		E: Math.E,
-		PI: Math.PI
-	};
 
 	var PRIMARY      = 1 << 0,
 		OPERATOR     = 1 << 1,
@@ -655,7 +618,7 @@ var MathParser = (function () {
 					}
 					this.addfunc(tokenstack, operstack, TOP1);
 					noperators++;
-					expected = (LPAREN);
+					expected = (PRIMARY | LPAREN | FUNCTION | SIGN);
 				}
 				else if (this.isVar(str)) {
 					if ((expected & PRIMARY) === 0) {
@@ -1054,7 +1017,7 @@ var MathParser = (function () {
 		isVar: function (str) {
 			if (str.length > 0) {
 				this.tokenindex = str;
-				this.tokenprio = 60;
+				this.tokenprio = 61;
 				this.pos += str.length;
 				return true;
 			}
