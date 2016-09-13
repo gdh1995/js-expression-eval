@@ -48,6 +48,7 @@ var MathParser = (function () {
 	}
 
 	// Based on http://www.json.org/json2.js
+	/* eslint no-control-regex: "off" */
 	var escapable = /[\\\'\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
 		meta = {	// table of character substitutions
 			'\b': '\\b',
@@ -71,6 +72,29 @@ var MathParser = (function () {
 		return v;
 	}
 
+	function hasValue(values, index) {
+		var parts = index.split(/\./);
+		var value = values;
+		var part;
+		while (part = parts.shift()) {
+			if (!(part in value)) {
+				return false;
+			}
+			value = value[part];
+		}
+		return true;
+	}
+
+	function getValue(values, index) {
+		var parts = index.split(/\./);
+		var value = values;
+		var part;
+		while (part = parts.shift()) {
+			value = value[part];
+		}
+		return value;
+	}
+
 	Expression.prototype = {
 		constructor: Expression,
 
@@ -90,8 +114,8 @@ var MathParser = (function () {
 				if (type_ === TNUMBER) {
 					nstack.push(item);
 				}
-				else if (type_ === TVAR && (item.index_ in values)) {
-					item = new Token(TNUMBER, 0, 0, values[item.index_]);
+				else if (type_ === TVAR && hasValue(values, item.index_)) {
+					item = new Token(TNUMBER, 0, 0, getValue(values, item.index_));
 					nstack.push(item);
 				}
 				else if (type_ === TOP2 && nstack.length > 1) {
@@ -169,13 +193,11 @@ var MathParser = (function () {
 					nstack.push(f(n1, n2));
 				}
 				else if (type_ === TVAR) {
-					if (item.index_ in values) {
-						nstack.push(values[item.index_]);
-					}
-					else if (item.index_ in this.functions) {
-						nstack.push(this.functions[item.index_]);
-					}
-					else {
+					if (hasValue(values, item.index_)) {
+						nstack.push(getValue(values, item.index_));
+					} else if (hasValue(this.functions, item.index_)) {
+						nstack.push(getValue(this.functions, item.index_));
+					} else {
 						throw new Error("undefined variable: " + item.index_);
 					}
 				}
@@ -298,10 +320,10 @@ var MathParser = (function () {
 		return "" + a + b;
 	}
 	function equal(a, b) {
-		return a == b;
+		return a === b;
 	}
 	function notEqual(a, b) {
-		return a != b;
+		return a !== b;
 	}
 	function greaterThan(a, b) {
 		return a > b;
@@ -374,10 +396,9 @@ var MathParser = (function () {
 	function bitNot(a) {
 		return ~a;
 	}
-	function trunc(a) {
-		if (Math.trunc) return Math.trunc(a);
-		else return x < 0 ? Math.ceil(x) : Math.floor(x);
-	}
+	var trunc = Math.trunc || function (a) {
+		return a < 0 ? Math.ceil(a) : Math.floor(a);
+	};
 	function random(a) {
 		return Math.random() * (a || 1);
 	}
@@ -390,7 +411,7 @@ var MathParser = (function () {
 		return b;
 	}
 
-	function hypot() {
+	var hypot = Math.hypot || function() { // Math.hypot is from Chrome 38
 		var y = 0;
 		var length = arguments.length;
 		for (var i = 0, j; i < length; i++) {
@@ -400,8 +421,7 @@ var MathParser = (function () {
 			y += j;
 		}
 		return Math.sqrt(y);
-	}
-	hypot = Math.hypot || hypot; // Math.hypot is from Chrome 38
+	};
 
 	function condition(cond, yep, nope) {
 		return cond ? yep : nope;
@@ -714,7 +734,7 @@ var MathParser = (function () {
 			return true;
 		},
 
-		// Ported from the yajjl JSON parser at http://code.google.com/p/yajjl/
+		// Ported from the yajjl JSON parser at https://code.google.com/p/yajjl/
 		unescape: function (v, pos) {
 			var buffer = [],
 				i, c,
@@ -1053,6 +1073,7 @@ var MathParser = (function () {
 	};
 
 	MathParser.singleton = new MathParser();
+	/* global exports */
 	(typeof exports !== 'undefined' && exports || {}).MathParser = MathParser.singleton;
 	return MathParser.singleton;
 })();
